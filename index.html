@@ -19,6 +19,11 @@
     .nav-links a:hover { color: var(--cream); }
     .nav-cta { text-decoration: none; color: var(--ink); background: var(--cream); font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.5rem 1.3rem; font-family: 'DM Sans', sans-serif; transition: all 0.3s; border: 2px solid var(--cream); }
     .nav-cta:hover { background: transparent; color: var(--cream); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--cream); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
     .hero { min-height: 100vh; background: var(--ink); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 6rem 3rem 4rem; }
     .hero-rings { position: absolute; bottom: -60px; right: 8%; width: 280px; height: 280px; opacity: 0.08; }
     .hero-rings circle { fill: none; stroke: var(--stain); stroke-width: 2; }
@@ -113,9 +118,18 @@
     .reveal { opacity: 0; transform: translateY(25px); transition: opacity 0.9s ease, transform 0.9s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     @keyframes fadeUp { from{opacity:0;transform:translateY(25px)} to{opacity:1;transform:translateY(0)} }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--cream); transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
     @media (max-width: 768px) {
       nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.2rem; }
+      .nav-links { display: none; flex-direction: column; gap: 0; position: fixed; top: 57px; left: 0; right: 0; background: rgba(28,16,8,0.98); padding: 1rem 0; border-bottom: 2px solid var(--stain); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 0.9rem 2rem; font-size: 0.85rem; border-bottom: 1px solid rgba(139,94,42,0.15); }
+      .nav-cta { display: none; }
+      .hamburger { display: flex; }
       .hero { padding: 6rem 1.5rem 4rem; }
       .section { padding: 4rem 1.5rem; }
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -128,15 +142,20 @@
   </style>
 </head>
 <body>
+
   <nav>
     <div class="nav-logo">Bishwa <span>Coffee</span></div>
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#menu">Menu</a></li>
-      <li><a href="#gallery">Gallery</a></li>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" onclick="closeNav()">Home</a></li>
+      <li><a href="#about" onclick="closeNav()">About</a></li>
+      <li><a href="#menu" onclick="closeNav()">Menu</a></li>
+      <li><a href="#gallery" onclick="closeNav()">Gallery</a></li>
+      <li><a href="#contact" onclick="closeNav()">Contact Us</a></li>
     </ul>
     <a href="#contact" class="nav-cta">Contact Us</a>
+    <div class="hamburger" id="hamburger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </div>
   </nav>
 
   <section class="hero" id="home">
@@ -296,12 +315,19 @@
   </footer>
 
   <script>
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('open');
+    }
+    function closeNav() {
+      document.getElementById('navLinks').classList.remove('open');
+      document.getElementById('hamburger').classList.remove('open');
+    }
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     reveals.forEach(el => observer.observe(el));
-
     function handleSubmit(e) {
       e.preventDefault();
       const btn = e.target.querySelector('.form-btn');
